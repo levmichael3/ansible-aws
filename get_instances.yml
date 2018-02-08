@@ -1,0 +1,13 @@
+--- 
+- name: Collect instances
+  hosts: localhost 
+  connection: local 
+  gather_facts: no 
+  vars: 
+    region: eu-west-1 
+  tasks: 
+    - name: Get instances list
+      command: "awless list instances --format json " 
+      register: awless_list 
+    - debug: var=item
+      with_items: "{{ awless_list.stdout }}"
