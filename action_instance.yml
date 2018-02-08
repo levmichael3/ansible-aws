@@ -1,0 +1,24 @@
+--- 
+- hosts: localhost 
+  gather_facts: no 
+  connection: local 
+  vars: 
+    region: eu-west-1
+    key_name:  "{{ key_name }}"
+    key_value: "{{ key_value }}"
+    action: "{{ action  }}"
+  tasks: 
+    - name: Get instance id 
+      command: aws ec2 describe-instances 
+               --filter Name=tag:{{ key_name }},Values={{ key_value }} 
+               --query 'Reservations[0].Instances[0].InstanceId' --output text 
+      register: instanceid 
+    - debug: var=item
+      with_items: "{{ instanceid.stdout }}"
+    - name: Take action - "{{ action }}" - instance 
+      ec2: 
+        region: "{{ region }}" 
+        instance_ids: "{{ instanceid.stdout }}" 
+        state: "{{ action  }}"
+        wait: yes 
+      when: instanceid.stdout!="None" 
