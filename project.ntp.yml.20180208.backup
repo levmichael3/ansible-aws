@@ -1,0 +1,35 @@
+---
+- name: Provision project NTP
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  vars: 
+    region: eu-west-1
+    keypair: 20170831
+    key_name:  "{{ key_name }}"
+    key_value: "{{ key_value }}"
+  tasks: 
+    - name: Get instance details and add it to inventory
+      command: aws ec2 describe-instances 
+               --filter Name=tag:{{ key_name }},Values={{ key_value }} 
+               --query 'Reservations[0].Instances[0].PublicDnsName' --output text 
+      register: instanceid 
+    - debug: var=item
+      with_items: "{{ instanceid.stdout }}"
+    - add_host:
+        name: "{{ instanceid.stdout }}"
+        ansible_user: "ubuntu"
+        groups: "webservers"
+- name: Setup NTP
+  hosts: webservers
+  gather_facts: true
+  become: yes
+  become_method: sudo
+  gather_facts: false
+  connection: ssh
+  vars:
+    region: eu-west-1
+    keypair: 20170831
+  tasks:
+    - name: Add NTP 
+      include: roles/project.ntp/tasks/main.yml

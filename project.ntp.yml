@@ -1,0 +1,10 @@
+---
+- name: Provision project NTP
+  hosts: "tag_{{key_name}}_{{key_value}}"
+  gather_facts: true
+  vars: 
+    region: eu-west-1
+    keypair: 20170831
+  tasks: 
+    - name: Add NTP 
+      include: roles/project.ntp/tasks/main.yml

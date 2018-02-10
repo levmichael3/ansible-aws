@@ -11,8 +11,11 @@
       region: eu-west-1
       count: 1
       aws_tags:
-        provisioning: "common"
-        step: "Example"
+        provisioning: "{{ provisioning }}"
+        step: "{{ step }}"
+        Environment: "{{ env }}"
+        Name: "{{ Name }}-{{ env }}"
+
 
     # Task that will be used to Launch/Create an EC2 Instance
     tasks:
@@ -51,6 +54,7 @@
                       keypair={{ keypair }}
                       count={{ count }}
                       instance_tags={{ aws_tags }}
+
         register: ec2
 
       - debug: var=item

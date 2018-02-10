@@ -1,0 +1,31 @@
+---
+- name: Load defaults
+  include_vars: roles/project.ntp/defaults/main.yml
+
+- name: Install NTP 
+  package:
+    name: ntp
+    state: present
+
+- name: Install tzdata package 
+  package:
+    name: tzdata
+    state: present
+
+- name: Set timezone
+  timezone:
+    name: "{{ ntp_timezone }}"
+
+- name: Ensure NTP is running and enabled if configured
+  service:
+    name: "{{ ntp_daemon }}"
+    state: started
+    enabled: yes
+  when: ntp_enabled
+
+- name: Generate ntp.conf file
+  template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+  notify: restart ntp
+  when: ntp_manage_config

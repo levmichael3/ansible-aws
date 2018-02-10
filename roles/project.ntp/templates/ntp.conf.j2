@@ -1,0 +1,29 @@
+# {{ ansible_managed }}
+
+driftfile /var/lib/ntp/drift
+
+statistics loopstats peerstats clockstats
+filegen loopstats file loopstats type day enable
+filegen peerstats file peerstats type day enable
+filegen clockstats file clockstats type day enable
+
+# Use public servers from the pool.ntp.org project.
+# Please consider joining the pool (http://www.pool.ntp.org/join.html).
+{% for item in ntp_servers %}
+server {{ item }}
+{% endfor %}
+
+# Permit time synchronization with our time source, but do not
+# permit the source to query or modify the service on this system.
+restrict default nomodify notrap nopeer noquery
+
+# Permit all access over the loopback interface.  This could
+# be tightened as well, but to do so would effect some of
+# the administrative functions.
+{% for item in ntp_restrict %}
+restrict {{ item }}
+{% endfor %}
+
+
+disable monitor
+
