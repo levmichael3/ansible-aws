@@ -6,7 +6,7 @@
     region: eu-west-1
     key_name:  "{{ key_name }}"
     key_value: "{{ key_value }}"
-    action: "{{ action  }}"
+    state: "{{ state }}"
   tasks: 
     - name: Get instance id 
       command: aws ec2 describe-instances 
@@ -19,6 +19,6 @@
       ec2: 
         region: "{{ region }}" 
         instance_ids: "{{ instanceid.stdout }}" 
-        state: "{{ action  }}"
+        state: "{{ state }}"
         wait: yes 
       when: instanceid.stdout!="None" 
