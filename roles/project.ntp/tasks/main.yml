@@ -6,11 +6,13 @@
   package:
     name: ntp
     state: present
+    use: apt
 
 - name: Install tzdata package 
   package:
     name: tzdata
     state: present
+    use: apt
 
 - name: Set timezone
   timezone:

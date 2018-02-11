@@ -20,6 +20,9 @@
         name: "{{ instanceid.stdout }}"
         ansible_user: "ubuntu"
         groups: "webservers"
+    - name: tell us which host we are on
+      debug:
+        var: inventory_hostname
 - name: Setup NTP
   hosts: webservers
   gather_facts: true

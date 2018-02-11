@@ -13,8 +13,8 @@
       aws_tags:
         provisioning: "{{ provisioning }}"
         step: "{{ step }}"
-        Environment: "{{ env }}"
-        Name: "{{ Name }}-{{ env }}"
+        Environment: "{{ Environment }}"
+        Name: "{{ Name }}-{{ Environment }}"
 
 
     # Task that will be used to Launch/Create an EC2 Instance
