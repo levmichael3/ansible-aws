@@ -1,16 +1,18 @@
 ---
-- name: Provision project NTP
+- name: Provision dynamic project 
   hosts: localhost
   connection: local
   gather_facts: true
   vars: 
-    region: eu-west-1
     keypair: 20170831
+    region: eu-west-1
     key_name:  "{{ key_name }}"
     key_value: "{{ key_value }}"
+    the_role: "{{ the_role }}"
   tasks: 
     - name: Get instance details and add it to inventory
       command: aws ec2 describe-instances 
+               --region "{{ region }}"
                --filter Name=tag:{{ key_name }},Values={{ key_value }} 
                --query 'Reservations[0].Instances[0].PublicDnsName' --output text 
       register: instanceid 
@@ -19,12 +21,12 @@
     - add_host:
         name: "{{ instanceid.stdout }}"
         ansible_user: "ubuntu"
-        groups: "webservers"
+        groups: "servers"
     - name: tell us which host we are on
       debug:
         var: inventory_hostname
-- name: Setup NTP
-  hosts: webservers
+- name: Setup dynamic role
+  hosts: servers
   gather_facts: true
   become: yes
   become_method: sudo
@@ -34,5 +36,5 @@
     region: eu-west-1
     keypair: 20170831
   tasks:
-    - name: Add NTP 
-      include: roles/project.ntp/tasks/main.yml
+    - name: Add role "{{ the_role }}" 
+      include: roles/project.{{ the_role }}/tasks/main.yml
