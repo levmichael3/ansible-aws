@@ -1,0 +1,27 @@
+---
+ - name: Include vars
+   include_vars: roles/project.consul/defaults/main.yml
+
+ - name: Download Consul x64
+   get_url: url="{{consul_url}}" dest=/tmp/consul.zip
+
+ - name: Download Unzip
+   apt: name=unzip state=latest
+
+ - name: unzip consul
+   command: unzip /tmp/consul.zip -d /tmp creates=/tmp/consul
+
+ - name: opt consul
+   command: mv /tmp/consul /opt/consul creates=/opt/consul
+
+ - name: etc consul
+   command: mkdir /etc/consul creates=/etc/consul
+
+ - name: log consul
+   command: mkdir /var/log/consul creates=/var/log/consul
+
+ - name: data consul
+   command: mkdir /var/consul creates=/var/consul
+ 
+ - name: supervise consul
+   template: src=roles/project.consul/templates/consul.conf.j2 dest=/etc/supervisor/conf.d/consul.conf
