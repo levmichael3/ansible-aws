@@ -1,11 +1,9 @@
 [local]
 localhost
 [consuls]
-34.242.116.254 consul_node_name=consol-1-dev
 
 
 [servers:vars]
 ansible_python_interpreter=/usr/bin/python3
 
 [servers]
-

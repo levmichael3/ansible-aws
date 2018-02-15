@@ -3,16 +3,15 @@
   include_vars: roles/project.supervisor/defaults/main.yml
 
 - name: Ensure Supervisor is installed (specific version).
-  pip:
-    name: supervisor
+  apt:
+    name: supervisor={{ supervisor_version }}
     state: present
-    version: "{{ supervisor_version }}"
   when: supervisor_version != 'latest'
 
 - name: Ensure Supervisor is installed (latest version).
-  pip:
+  apt:
     name: supervisor
-    state: present
+    state: latest
   when: supervisor_version == 'latest'
 
 - name: Ensure Supervisor log dir exists.
@@ -28,12 +27,12 @@
 
 - name: Ensure Supervisor is started (if configured).
   service:
-    name: supervisord
+    name: supervisor
     state: started
   when: supervisor_started
 
 - name: Ensure Supervisor is enabled at boot (if configured).
   service:
-    name: supervisord
+    name: supervisor
     enabled: yes
   when: supervisor_enabled
