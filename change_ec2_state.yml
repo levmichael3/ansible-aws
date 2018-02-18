@@ -11,7 +11,7 @@
     - name: Get instance id 
       command: aws ec2 describe-instances 
                --region "{{ region }}"
-               --filter Name=tag:{{ key_name }},Values={{ key_value }}  Name=instance-state-name, Code=16
+               --filter Name=tag:{{ key_name }},Values={{ key_value }}  
                --query 'Reservations[0].Instances[0].InstanceId' --output text 
       register: instanceid 
     - debug: var=item
