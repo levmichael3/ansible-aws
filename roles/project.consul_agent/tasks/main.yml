@@ -1,0 +1,11 @@
+---
+ - name: Set Up Consul Agent Conf
+   template: 
+     src: roles/project.consul_agent/templates/agent.json.j2 
+     dest: /etc/consul/agent.json
+     owner: root
+     group: root
+     mode: 0755
+
+ - name: Restart Consul
+   supervisorctl: name=consul state=restarted
